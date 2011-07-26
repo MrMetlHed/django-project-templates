@@ -84,8 +84,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-    'django.contrib.gis',
+    #'django.contrib.gis',
     'django.contrib.sitemaps',
+    'south',
 )
 
 # Predefined domain
