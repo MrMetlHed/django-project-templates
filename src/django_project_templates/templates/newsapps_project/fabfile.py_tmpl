@@ -2,6 +2,7 @@
 # No copying allowed
 
 from fabric.api import *
+from contextlib import contextmanager as _contextmanager
 
 """
 Base configuration
@@ -40,6 +41,19 @@ def staging():
     env.hosts = ['db.$(staging_domain)'] 
     env.user = 'newsapps'
     env.s3_bucket = 'media.$(staging_domain)'
+    
+
+
+@_contextmanager
+def virtualenv():
+    """
+    Activates the environment's virtualenv. This makes
+    executing ./manage calls easier.
+    """    
+    with prefix('source %(env_path)s/bin/activate' % env):
+        yield
+
+
     
 """
 Branches
@@ -141,6 +155,7 @@ def deploy():
         maintenance_up()
         
     checkout_latest()
+    collect_static()
     gzip_assets()
     deploy_to_s3()
     maintenance_down()
@@ -151,6 +166,18 @@ def maintenance_up():
     """
     sudo('cp %(repo_path)s/%(project_name)s/configs/%(settings)s/apache_maintenance %(apache_config_path)s' % env)
     reboot()
+    
+
+def collect_static():
+    """
+    Collects Static files from installed apps and places their
+    content in the STATIC_ROOT. This allows that content to be
+    pushed to S3, but not live in the repo.
+    """
+    with virtualenv():
+        with cd('%(repo_path)s' % env):
+            run('./manage collectstatic')
+
 
 def gzip_assets():
     """
