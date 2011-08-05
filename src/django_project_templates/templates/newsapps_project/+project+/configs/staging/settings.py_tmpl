@@ -24,7 +24,10 @@ DATABASES = {
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://media.$(staging_domain)/$(project)/'
+# MEDIA_URL = 'http://media.$(staging_domain)/$(project)/'
+MEDIA_URL = 'https://s3.amazonaws.com/media.$(staging_domain)/$(project)/site_media/'
+STATIC_URL = 'https://s3.amazonaws.com/media.$(staging_domain)/$(project)/site_media/static/'
+
 
 # Predefined domain
 MY_SITE_DOMAIN = '$(project).$(staging_domain)'
