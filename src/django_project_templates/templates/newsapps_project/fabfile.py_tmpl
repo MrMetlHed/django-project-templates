@@ -113,7 +113,8 @@ def setup_virtualenv():
     Setup a fresh virtualenv.
     """
     run('virtualenv -p %(python)s --no-site-packages %(env_path)s;' % env)
-    run('source %(env_path)s/bin/activate; easy_install -U setuptools; easy_install pip;' % env)
+    with virtualenv():
+        run('source %(sudo easy_install -U setuptools; sudo easy_install pip; sudo easy_install mercurial' % env)
 
 def clone_repo():
     """
@@ -125,13 +126,16 @@ def checkout_latest():
     """
     Pull the latest code on the specified branch.
     """
-    run('cd %(repo_path)s; git checkout %(branch)s; git pull origin %(branch)s' % env)
+    with cd('%(repo_path)s' % env):
+        run('git checkout %(branch)s; git pull origin %(branch)s' % env)
 
 def install_requirements():
     """
     Install the required packages using pip.
     """
-    run('source %(env_path)s/bin/activate; pip install -E %(env_path)s -r %(repo_path)s/requirements.txt' % env)
+    with virtualenv():
+        with cd('%(repo_path)s' % env):
+            run('pip install -E %(env_path)s -r requirements.txt' % env)
 
 def install_apache_conf():
     """
@@ -184,7 +188,8 @@ def gzip_assets():
     GZips every file in the assets directory and places the new file
     in the gzip directory with the same filename.
     """
-    run('cd %(repo_path)s; python gzip_assets.py' % env)
+    with cd('%(repo_path)s' % env):
+        run('python gzip_assets.py' % env)
 
 def deploy_to_s3():
     """
