@@ -49,3 +49,9 @@ INTERNAL_IPS = ()
 import logging.config
 LOG_FILENAME = os.path.join(os.path.dirname(__file__), 'logging.conf')
 logging.config.fileConfig(LOG_FILENAME)
+
+# Allow for private settings
+try:
+    from settings_private import * 
+except ImportError:
+    pass
