@@ -6,4 +6,5 @@ error.log
 *~
 $(project)/gzip/*
 local_settings.py
+settings_private.py
 .idea
